@@ -13,7 +13,7 @@ usdz_url = "https://modelviewer.dev/shared-assets/models/Astronaut.usdz"
 
 # 🔹 STEP 2: After you deploy on Streamlit Cloud, copy your public app URL here
 # Example: "https://your-username-ar-app.streamlit.app"
-app_url = "https://your-username-ar-app.streamlit.app"
+app_url = "https://ar-app.streamlit.app/"
 # ---------------------------------------------------------------------
 
 st.title("🚀 3D Model with AR Preview")
@@ -60,3 +60,4 @@ buf = BytesIO()
 img.save(buf, format="PNG")
 
 st.image(buf.getvalue(), caption="Scan to open the AR viewer on your phone")
+
