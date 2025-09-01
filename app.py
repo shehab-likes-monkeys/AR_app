@@ -6,19 +6,17 @@ from io import BytesIO
 st.set_page_config(page_title="3D Model with AR", layout="centered")
 
 # ---------------------------------------------------------------------
-# 🔹 STEP 1: Replace these links with YOUR model URLs
-# (use GitHub + jsDelivr for free hosting, or keep the astronaut for testing)
+# 🔹 Replace these links with YOUR model URLs
 glb_url = "https://modelviewer.dev/shared-assets/models/Astronaut.glb"
 usdz_url = "https://modelviewer.dev/shared-assets/models/Astronaut.usdz"
 
-# 🔹 STEP 2: After you deploy on Streamlit Cloud, copy your public app URL here
-# Example: "https://your-username-ar-app.streamlit.app"
-app_url = "https://ar-app.streamlit.app/"
+# 🔹 Your Streamlit Cloud public app URL
+app_url = "https://your-username-ar-app.streamlit.app"
 # ---------------------------------------------------------------------
 
 st.title("🚀 3D Model with AR Preview")
 
-# --- Embed <model-viewer> for 3D + AR ---
+# --- Embed <model-viewer> ---
 html_code = f"""
 <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 
@@ -48,16 +46,22 @@ html_code = f"""
 
 components.html(html_code, height=550)
 
-# --- QR Code Section ---
-st.subheader("📱 Scan to View in Browser")
+# --- Detect device type ---
+browser_info = st.runtime.get_browser_info()
+user_agent = browser_info.get("user_agent", "").lower()
 
-qr = qrcode.QRCode(box_size=8, border=2)
-qr.add_data(app_url)  # Point QR to your deployed app
-qr.make(fit=True)
+is_mobile = any(m in user_agent for m in ["iphone", "android", "ipad"])
 
-img = qr.make_image(fill_color="black", back_color="white")
-buf = BytesIO()
-img.save(buf, format="PNG")
+# --- Show QR only on desktop ---
+if not is_mobile:
+    st.subheader("📱 Scan to View in Browser")
 
-st.image(buf.getvalue(), caption="Scan to open the AR viewer on your phone")
+    qr = qrcode.QRCode(box_size=8, border=2)
+    qr.add_data(app_url)
+    qr.make(fit=True)
 
+    img = qr.make_image(fill_color="black", back_color="white")
+    buf = BytesIO()
+    img.save(buf, format="PNG")
+
+    st.image(buf.getvalue(), caption="Scan this to open the AR viewer on your phone")
