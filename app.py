@@ -12,7 +12,7 @@ glb_url = "https://modelviewer.dev/shared-assets/models/Astronaut.glb"
 usdz_url = "https://modelviewer.dev/shared-assets/models/Astronaut.usdz"
 
 # 🔹 Your Streamlit Cloud public app URL
-app_url = "https://your-username-ar-app.streamlit.app"
+app_url = "https://ar-app.streamlit.app/"
 # ---------------------------------------------------------------------
 
 st.title("🚀 3D Model with AR Preview")
@@ -76,3 +76,4 @@ qr_html = f"""
 """
 
 st.markdown(qr_html, unsafe_allow_html=True)
+
