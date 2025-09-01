@@ -2,16 +2,17 @@ import streamlit as st
 import streamlit.components.v1 as components
 import qrcode
 from io import BytesIO
+import base64
 
 st.set_page_config(page_title="3D Model with AR", layout="centered")
 
 # ---------------------------------------------------------------------
-# 🔹 Replace these links with YOUR model URLs
+# 🔹 Replace with your model URLs
 glb_url = "https://modelviewer.dev/shared-assets/models/Astronaut.glb"
 usdz_url = "https://modelviewer.dev/shared-assets/models/Astronaut.usdz"
 
 # 🔹 Your Streamlit Cloud public app URL
-app_url = "https://ar-app.streamlit.app/"
+app_url = "https://your-username-ar-app.streamlit.app"
 # ---------------------------------------------------------------------
 
 st.title("🚀 3D Model with AR Preview")
@@ -46,23 +47,32 @@ html_code = f"""
 
 components.html(html_code, height=550)
 
-# --- Detect device type ---
-browser_info = st.runtime.get_browser_info()
-user_agent = browser_info.get("user_agent", "").lower()
+# --- QR Code Section ---
+qr = qrcode.QRCode(box_size=8, border=2)
+qr.add_data(app_url)
+qr.make(fit=True)
 
-is_mobile = any(m in user_agent for m in ["iphone", "android", "ipad"])
+img = qr.make_image(fill_color="black", back_color="white")
+buf = BytesIO()
+img.save(buf, format="PNG")
 
-# --- Show QR only on desktop ---
-if not is_mobile:
-    st.subheader("📱 Scan to View in Browser")
+# Convert QR image to base64 so we can embed with CSS
+img_base64 = base64.b64encode(buf.getvalue()).decode("utf-8")
 
-    qr = qrcode.QRCode(box_size=8, border=2)
-    qr.add_data(app_url)
-    qr.make(fit=True)
+# Use CSS to hide QR on small screens
+qr_html = f"""
+<style>
+@media (max-width: 768px) {{
+  .qr-wrapper {{
+    display: none;
+  }}
+}}
+</style>
+<div class="qr-wrapper" style="text-align:center;">
+  <h3>📱 Scan to View in Browser</h3>
+  <img src="data:image/png;base64,{img_base64}" alt="QR Code" width="200">
+  <p>Scan this to open the AR viewer on your phone</p>
+</div>
+"""
 
-    img = qr.make_image(fill_color="black", back_color="white")
-    buf = BytesIO()
-    img.save(buf, format="PNG")
-
-    st.image(buf.getvalue(), caption="Scan this to open the AR viewer on your phone")
-
+st.markdown(qr_html, unsafe_allow_html=True)
