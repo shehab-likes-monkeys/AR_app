@@ -11,7 +11,7 @@ glb_url = "https://modelviewer.dev/shared-assets/models/Astronaut.glb"
 usdz_url = "https://modelviewer.dev/shared-assets/models/Astronaut.usdz"
 
 # 🔹 Your Streamlit Cloud public app URL
-app_url = "https://your-username-ar-app.streamlit.app"
+app_url = "https://ar-app.streamlit.app/"
 # ---------------------------------------------------------------------
 
 st.title("🚀 3D Model with AR Preview")
@@ -65,3 +65,4 @@ if not is_mobile:
     img.save(buf, format="PNG")
 
     st.image(buf.getvalue(), caption="Scan this to open the AR viewer on your phone")
+
